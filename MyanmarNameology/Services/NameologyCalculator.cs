@@ -4,6 +4,8 @@ namespace MyanmarNameology.Services;
 
 public static class NameologyCalculator
 {
+    private const char Asat = '်';
+
     public static IReadOnlyList<LetterValueGroup> LetterGroups { get; } =
     [
         new(1, "တနင်္ဂနွေ", "၁", ['အ', 'ဣ', 'ဤ', 'ဥ', 'ဦ', 'ဧ', 'ဩ', 'ဪ']),
@@ -44,21 +46,16 @@ public static class NameologyCalculator
             {
                 Status = NameologyResultStatus.Empty,
                 Name = string.Empty,
+                Keyword = string.Empty,
                 Message = "တွက်ရန်အတွက် နာမည်တစ်ခု ထည့်ပေးပါ။"
             };
         }
 
         var matchedLetters = new List<MatchedLetter>();
+        var keywordLetters = ExtractKeywordLetters(name);
 
-        for (var index = 0; index < name.Length; index++)
+        foreach (var character in keywordLetters)
         {
-            if (ShouldSkipCharacter(name, index))
-            {
-                continue;
-            }
-
-            var character = name[index];
-
             if (LetterValues.TryGetValue(character, out var value))
             {
                 matchedLetters.Add(new MatchedLetter(character, value));
@@ -71,6 +68,7 @@ public static class NameologyCalculator
             {
                 Status = NameologyResultStatus.NoMyanmarLetters,
                 Name = name,
+                Keyword = string.Empty,
                 Message = "တွက်လို့ရမယ့် မြန်မာအက္ခရာများ ထည့်ပေးပါ။"
             };
         }
@@ -89,6 +87,7 @@ public static class NameologyCalculator
             Status = NameologyResultStatus.Success,
             Name = name,
             Message = "ရလဒ်ထွက်ပြီးပါပြီ။",
+            Keyword = new string(keywordLetters.ToArray()),
             Total = total,
             TotalPlusSeven = totalPlusSeven,
             Remainder = remainder,
@@ -97,11 +96,27 @@ public static class NameologyCalculator
         };
     }
 
-    private static bool ShouldSkipCharacter(string text, int index)
+    private static List<char> ExtractKeywordLetters(string text)
     {
-        return text[index] == 'န'
-            && index >= 2
-            && text[index - 1] == 'ွ'
-            && text[index - 2] == 'ထ';
+        var letters = new List<char>();
+
+        for (var index = 0; index < text.Length; index++)
+        {
+            var character = text[index];
+
+            if (!LetterValues.ContainsKey(character) || IsFinalConsonant(text, index))
+            {
+                continue;
+            }
+
+            letters.Add(character);
+        }
+
+        return letters;
+    }
+
+    private static bool IsFinalConsonant(string text, int index)
+    {
+        return index + 1 < text.Length && text[index + 1] == Asat;
     }
 }

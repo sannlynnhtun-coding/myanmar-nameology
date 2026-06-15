@@ -28,6 +28,7 @@ public sealed record NameologyResult
     public int Total { get; init; }
     public int TotalPlusSeven { get; init; }
     public int Remainder { get; init; }
+    public required string Keyword { get; init; }
     public IReadOnlyList<MatchedLetter> MatchedLetters { get; init; } = Array.Empty<MatchedLetter>();
     public NameologyMeaning? Meaning { get; init; }
     public bool IsSuccess => Status == NameologyResultStatus.Success;
