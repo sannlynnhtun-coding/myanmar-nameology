@@ -2,6 +2,7 @@ bin/
 obj/
 .vs/
 .vscode/
+.vercel/
 TestResults/
 *.user
 *.suo

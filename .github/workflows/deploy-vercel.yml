@@ -1,0 +1,73 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vercel-production-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_VERSION: 10.0.x
+  PROJECT_PATH: MyanmarNameology/MyanmarNameology.csproj
+  PUBLISH_OUTPUT: artifacts/publish
+  VERCEL_DEPLOY_DIR: artifacts/vercel
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate Vercel secrets
+        shell: bash
+        run: |
+          test -n "${VERCEL_TOKEN}" || { echo "VERCEL_TOKEN secret is missing."; exit 1; }
+          test -n "${VERCEL_ORG_ID}" || { echo "VERCEL_ORG_ID secret is missing."; exit 1; }
+          test -n "${VERCEL_PROJECT_ID}" || { echo "VERCEL_PROJECT_ID secret is missing."; exit 1; }
+
+      - name: Restore
+        run: dotnet restore MyanmarNameology.slnx
+
+      - name: Publish Blazor WebAssembly
+        run: dotnet publish ${{ env.PROJECT_PATH }} --configuration Release --no-restore --output ${{ env.PUBLISH_OUTPUT }}
+
+      - name: Prepare static deployment
+        shell: bash
+        run: |
+          mkdir -p "${VERCEL_DEPLOY_DIR}"
+          cp -R "${PUBLISH_OUTPUT}/wwwroot/." "${VERCEL_DEPLOY_DIR}/"
+          cp vercel.json "${VERCEL_DEPLOY_DIR}/vercel.json"
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@50.28.0
+
+      - name: Pull Vercel project settings
+        working-directory: ${{ env.VERCEL_DEPLOY_DIR }}
+        run: vercel pull --yes --environment=production --token="${VERCEL_TOKEN}"
+
+      - name: Deploy to Vercel production
+        working-directory: ${{ env.VERCEL_DEPLOY_DIR }}
+        run: vercel deploy --yes --prod --token="${VERCEL_TOKEN}"
