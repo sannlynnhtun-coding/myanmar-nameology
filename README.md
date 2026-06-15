@@ -111,9 +111,3 @@ VERCEL_PROJECT_ID
 ```
 
 `main` branch ကို push လုပ်တဲ့အခါ build output ကို Vercel project သို့ deploy လုပ်နိုင်ပါတယ်။ SPA routing အတွက် `vercel.json` ထဲမှာ rewrite rule ပါဝင်ပြီး Blazor `_framework` assets တွေကို long-term cache header သတ်မှတ်ထားပါတယ်။
-
-## Notes
-
-- `myanmar-nameology.html` က reference HTML file ဖြစ်ပြီး app build flow ထဲမပါပါ။
-- Calculator logic ကို C# service ထဲမှာ ထားထားလို့ UI နဲ့ calculation ကို သီးခြားထိန်းနိုင်ပါတယ်။
-- နာမည်ထဲက whitespace နဲ့ unsupported marks တွေကို တွက်ချက်မှုထဲ မထည့်ပါ။
