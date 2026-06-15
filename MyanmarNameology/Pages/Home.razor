@@ -34,11 +34,15 @@
                            type="text"
                            value="@_name"
                            @oninput="HandleNameInput"
+                           aria-describedby="name-input-hint"
                            autocomplete="name"
                            spellcheck="false"
                            placeholder="မြန်မာနာမည် ထည့်ပါ" />
                     <button type="submit">တွက်မယ်</button>
                 </div>
+                <p id="name-input-hint" class="input-hint">
+                    Eg. မြန်မာစာလုံးဖြင့် မိမိနာမည်ကို ရိုက်ထည့်ပြီး တွက်မယ် ကိုနှိပ်ပါ။
+                </p>
             </form>
 
             <section class="@ResultClass" aria-live="polite">

@@ -7,12 +7,12 @@ public static class NameologyCalculator
     public static IReadOnlyList<LetterValueGroup> LetterGroups { get; } =
     [
         new(1, "တနင်္ဂနွေ", "၁", ['အ', 'ဣ', 'ဤ', 'ဥ', 'ဦ', 'ဧ', 'ဩ', 'ဪ']),
-        new(2, "တနင်္လာ", "၂", ['က', 'ခ', 'ဂ', 'ဃ', 'င']),
-        new(3, "အင်္ဂါ", "၃", ['စ', 'ဆ', 'ဇ', 'ဈ', 'ည']),
-        new(4, "ဗုဒ္ဓဟူး", "၄", ['ယ', 'ရ', 'လ', 'ဝ']),
-        new(5, "ကြာသပတေး", "၅", ['ပ', 'ဖ', 'ဗ', 'ဘ', 'မ']),
-        new(6, "သောကြာ", "၆", ['သ', 'ဟ']),
-        new(7, "စနေ", "၇", ['တ', 'ထ', 'ဒ', 'ဓ', 'န'])
+        new(2, "တနင်္လာ", "၂", ['က', 'ခ', 'ဂ', 'ဃ', 'ထ']),
+        new(3, "အင်္ဂါ", "၃", ['စ', 'ဇ', 'ဈ', 'ည']),
+        new(4, "ဗုဒ္ဓဟူး", "၄", ['ယ', 'ရ', 'ဝ']),
+        new(5, "ကြာသပတေး", "၅", ['င', 'ပ', 'ဖ', 'ဗ', 'ဘ', 'မ']),
+        new(6, "သောကြာ", "၆", ['ဆ', 'သ', 'ဟ']),
+        new(7, "စနေ", "၇", ['လ', 'တ', 'ဒ', 'ဓ', 'န'])
     ];
 
     private static readonly IReadOnlyDictionary<char, int> LetterValues =
@@ -50,8 +50,15 @@ public static class NameologyCalculator
 
         var matchedLetters = new List<MatchedLetter>();
 
-        foreach (var character in name)
+        for (var index = 0; index < name.Length; index++)
         {
+            if (ShouldSkipCharacter(name, index))
+            {
+                continue;
+            }
+
+            var character = name[index];
+
             if (LetterValues.TryGetValue(character, out var value))
             {
                 matchedLetters.Add(new MatchedLetter(character, value));
@@ -88,5 +95,13 @@ public static class NameologyCalculator
             MatchedLetters = matchedLetters,
             Meaning = Meanings[remainder]
         };
+    }
+
+    private static bool ShouldSkipCharacter(string text, int index)
+    {
+        return text[index] == 'န'
+            && index >= 2
+            && text[index - 1] == 'ွ'
+            && text[index - 2] == 'ထ';
     }
 }
