@@ -9,12 +9,12 @@ public static class NameologyCalculator
     public static IReadOnlyList<LetterValueGroup> LetterGroups { get; } =
     [
         new(1, "တနင်္ဂနွေ", "၁", ['အ', 'ဣ', 'ဤ', 'ဥ', 'ဦ', 'ဧ', 'ဩ', 'ဪ']),
-        new(2, "တနင်္လာ", "၂", ['က', 'ခ', 'ဂ', 'ဃ', 'ထ']),
-        new(3, "အင်္ဂါ", "၃", ['စ', 'ဇ', 'ဈ', 'ည']),
-        new(4, "ဗုဒ္ဓဟူး", "၄", ['ယ', 'ရ', 'ဝ']),
-        new(5, "ကြာသပတေး", "၅", ['င', 'ပ', 'ဖ', 'ဗ', 'ဘ', 'မ']),
-        new(6, "သောကြာ", "၆", ['ဆ', 'သ', 'ဟ']),
-        new(7, "စနေ", "၇", ['လ', 'တ', 'ဒ', 'ဓ', 'န'])
+        new(2, "တနင်္လာ", "၂", ['က', 'ခ', 'ဂ', 'ဃ', 'င']),
+        new(3, "အင်္ဂါ", "၃", ['စ', 'ဆ', 'ဇ', 'ဈ', 'ည']),
+        new(4, "ဗုဒ္ဓဟူး", "၄", ['ယ', 'ရ', 'လ', 'ဝ']),
+        new(5, "ကြာသပတေး", "၅", ['ပ', 'ဖ', 'ဗ', 'ဘ', 'မ']),
+        new(6, "သောကြာ", "၆", ['သ', 'ဟ', 'ဠ']),
+        new(7, "စနေ", "၇", ['တ', 'ထ', 'ဒ', 'ဓ', 'န'])
     ];
 
     private static readonly IReadOnlyDictionary<char, int> LetterValues =
@@ -117,6 +117,26 @@ public static class NameologyCalculator
 
     private static bool IsFinalConsonant(string text, int index)
     {
-        return index + 1 < text.Length && text[index + 1] == Asat;
+        for (var nextIndex = index + 1; nextIndex < text.Length; nextIndex++)
+        {
+            var character = text[nextIndex];
+
+            if (character == Asat)
+            {
+                return true;
+            }
+
+            if (!CanAppearBeforeAsat(character))
+            {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool CanAppearBeforeAsat(char character)
+    {
+        return character is '့' or 'း';
     }
 }
