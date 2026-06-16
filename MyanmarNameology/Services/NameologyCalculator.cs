@@ -5,6 +5,7 @@ namespace MyanmarNameology.Services;
 public static class NameologyCalculator
 {
     private const char Asat = '်';
+    private const char Virama = '္';
 
     public static IReadOnlyList<LetterValueGroup> LetterGroups { get; } =
     [
@@ -104,7 +105,9 @@ public static class NameologyCalculator
         {
             var character = text[index];
 
-            if (!LetterValues.ContainsKey(character) || IsFinalConsonant(text, index))
+            if (!LetterValues.ContainsKey(character)
+                || IsStackedConsonantLead(text, index)
+                || IsFinalConsonant(text, index))
             {
                 continue;
             }
@@ -113,6 +116,11 @@ public static class NameologyCalculator
         }
 
         return letters;
+    }
+
+    private static bool IsStackedConsonantLead(string text, int index)
+    {
+        return index + 1 < text.Length && text[index + 1] == Virama;
     }
 
     private static bool IsFinalConsonant(string text, int index)
