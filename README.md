@@ -16,6 +16,14 @@
 
 ဒီ app ရဲ့ landing page က marketing page မဟုတ်ဘဲ calculator ကိုပဲ ပထမဆုံး screen အနေနဲ့ သုံးနိုင်အောင် ဖန်တီးထားပါတယ်။ Name input, calculate action, live result area, formula summary, နေ့နံတန်ဖိုး table တွေကို responsive layout နဲ့ ပြထားပါတယ်။
 
+## Contributors
+
+- [sannlynnhtun-coding](https://github.com/sannlynnhtun-coding)
+- [theinhtetaung-dev](https://github.com/theinhtetaung-dev)
+- [phonewinttun-dev](https://github.com/phonewinttun-dev)
+- [hlaingmyoaungdeveloper](https://github.com/hlaingmyoaungdeveloper)
+- [thirilinn-dev](https://github.com/thirilinn-dev)
+
 ## App Flow
 
 1. User က မြန်မာနာမည်ကို input box ထဲမှာ ရိုက်ထည့်သည်။
