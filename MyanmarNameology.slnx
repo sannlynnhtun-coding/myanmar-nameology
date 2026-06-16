@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="MyanmarNameology.Tests/MyanmarNameology.Tests.csproj" />
   <Project Path="MyanmarNameology/MyanmarNameology.csproj" />
 </Solution>
