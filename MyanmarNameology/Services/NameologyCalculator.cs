@@ -6,6 +6,8 @@ public static class NameologyCalculator
 {
     private const char Asat = '်';
     private const char Virama = '္';
+    private const char Nnya = 'ဉ';
+    private const char Nya = 'ည';
 
     public static IReadOnlyList<LetterValueGroup> LetterGroups { get; } =
     [
@@ -103,7 +105,7 @@ public static class NameologyCalculator
 
         for (var index = 0; index < text.Length; index++)
         {
-            var character = text[index];
+            var character = NormalizeLetter(text[index]);
 
             if (!LetterValues.ContainsKey(character)
                 || IsStackedConsonantLead(text, index)
@@ -116,6 +118,11 @@ public static class NameologyCalculator
         }
 
         return letters;
+    }
+
+    private static char NormalizeLetter(char character)
+    {
+        return character == Nnya ? Nya : character;
     }
 
     private static bool IsStackedConsonantLead(string text, int index)
